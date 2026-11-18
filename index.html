@@ -7,9 +7,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#c8102e">
+<meta name="theme-color" content="#13355b">
+<link rel="icon" type="image/png" href="mf-hr-icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
-  :root { --bg: #f6f6f7; --fg: #1f2329; --mut: #6b7280; --brand: #c8102e; }
+  :root { --bg: #f6f6f7; --fg: #1f2329; --mut: #6b7280; --brand: #0f8c8d; }
   @media (prefers-color-scheme: dark) { :root { --bg: #111317; --fg: #e8e9eb; --mut: #9aa0a8; } }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   #ld { min-height: 100%; display: grid; place-items: center; text-align: center; padding: 16px; box-sizing: border-box; }
@@ -20,7 +22,7 @@
 </style>
 </head>
 <body>
-<div id="ld"><div><div class="sp"></div><p>Opening Mfilm HR…</p></div></div>
+<div id="ld"><div><img src="mf-hr-icon-192.png" alt="" width="72" height="72" style="border-radius:16px;display:block;margin:0 auto 16px"><div class="sp"></div><p>Opening Mfilm HR…</p></div></div>
 <script>
 /* Mfilm HR loader. This file never needs to change again:
    it fetches the latest app from your Google Apps Script and keeps a copy on the phone for fast start. */
@@ -40,7 +42,8 @@ function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (
 var cached = null;
 try { cached = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
 if (cached && cached.html) {
-  show(cached.html);
+  // open the saved copy once this page has finished loading, so nothing of this page is left behind
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { show(cached.html); }); else show(cached.html);
   fetchUi().then(function (d) {
     if (d.version !== cached.version) { save(d); try { window.dispatchEvent(new CustomEvent('mf-update', { detail: d.version })); } catch (e) { } }
   }).catch(function () { });
